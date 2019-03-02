@@ -72,23 +72,28 @@ def four_point_transform(image, pts):
 
 def catPoly(img, cords, withThreshold=True):
     wraped = four_point_transform(img, np.array(cords, dtype=np.int32))
+    # cv2.imwrite('./img.png', img[cords[0][1]:cords[2][1], cords[0][0]:cords[2][0]])
+    # cv2.imwrite('./wraped.png', wraped)
     wrapedHeight, wrapedWidth, _ = wraped.shape
     ratio = wrapedHeight / OPTIMAL_HEIGHT
     if ratio == 0:
         ratio = 1
 
     wrapedSmall = cv2.resize(wraped, (int(wrapedWidth / ratio), OPTIMAL_HEIGHT))
+    # cv2.imwrite('./wrapedSmall.png', wrapedSmall)
 
     if not withThreshold:
         return wrapedSmall
 
     reduceNoise = cv2.fastNlMeansDenoisingColored(wrapedSmall, None, 10, 10, 7, 21)
+    # cv2.imwrite('./reduceNoise.png', reduceNoise)
     # cv2.imshow('dst', reduceNoise)
 
     gray = cv2.cvtColor(reduceNoise, cv2.COLOR_BGR2GRAY)
 
     blured = cv2.medianBlur(gray, 11)
     th = cv2.adaptiveThreshold(blured, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 39, 5)
+    # cv2.imwrite('./th.png', th)
     # cv2.imshow('th', th)
 
     return th

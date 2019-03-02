@@ -6,8 +6,8 @@ from service.cardCornersDetection import findCorners
 from helpers.ocr import parseArm, parseEng
 
 # img = cv2.imread('../images/front.jpg', cv2.IMREAD_COLOR)
-img = cv2.imread('../images/3.jpg', cv2.IMREAD_COLOR)
-# img = cv2.imread('../images/4.jpg', cv2.IMREAD_COLOR)
+# img = cv2.imread('../images/3.jpg', cv2.IMREAD_COLOR)
+img = cv2.imread('../images/4.jpg', cv2.IMREAD_COLOR)
 # img = cv2.imread('../images/20190227_223451.jpg', cv2.IMREAD_COLOR)
 # img = cv2.imread('../images/20190227_223532.jpg', cv2.IMREAD_COLOR)
 
@@ -18,17 +18,17 @@ if cords == None:
 templateCords, boxCords = cords
 
 a3 = np.array([boxCords], dtype=np.int32)
-cv2.polylines(img, a3, True, (0, 255, 0), 6, 8)
+cv2.polylines(img, a3, True, (0, 255, 0), 24, 8)
 
 for cord in templateCords:
-    cv2.rectangle(img, cord[0], cord[1], (255, 0, 0), 6)
+    cv2.rectangle(img, cord[0], cord[1], (255, 0, 0), 24)
 
 
 def addField(field, parser):
     ownerLineCords = getContentCorners(boxCords, (field['left'], field['top']), field['width'], field['height'],
                                        CARD['width'], CARD['height'])
     ownerLineCordsA3 = np.array([ownerLineCords], dtype=np.int32)
-    cv2.polylines(img, ownerLineCordsA3, True, (0, 0, 255), 6, 8)
+    cv2.polylines(img, ownerLineCordsA3, True, (0, 0, 255), 24, 8)
     print(parser(img, ownerLineCords))
 
 
@@ -42,6 +42,7 @@ addField(CARD['front']['addressLineEng2'], parseEng)
 addField(CARD['front']['addressLineEng3'], parseEng)
 
 cv2.imshow('cords', cv2.resize(img, (645, 405)))
+# cv2.imwrite('./test.png', cv2.resize(img, (645, 405)))
 cv2.waitKey(0)
 
 cv2.destroyAllWindows()
